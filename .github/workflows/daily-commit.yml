@@ -1,0 +1,24 @@
+name: Daily auto-commit
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # Runs once per day at 09:00 UTC
+
+jobs:
+  commit:
+    runs-on: ubuntu‑latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make a small change
+        run: |
+          echo "Last updated at $(date -u)" >> daily-update.txt
+
+      - name: Commit using email 22f3000632@ds.study.iitm.ac.in
+        run: |
+          git config user.name "Scheduled Action"
+          git config user.email "22f3000632@ds.study.iitm.ac.in"
+          git add daily-update.txt
+          git commit -m "Auto daily update from GitHub Actions" || echo "No changes to commit"
+          git push
